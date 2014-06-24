@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preview.support.v4.app.NotificationManagerCompat;
 import android.preview.support.wearable.notifications.RemoteInput;
@@ -13,11 +14,23 @@ import android.preview.support.wearable.notifications.WearableNotifications;
 import android.support.v4.app.NotificationCompat;
 import android.view.View;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+
+import twitter4j.Status;
+import twitter4j.Twitter;
+import twitter4j.TwitterException;
+import twitter4j.TwitterFactory;
+import twitter4j.conf.ConfigurationBuilder;
+
 import static android.app.Notification.*;
+import static android.util.Log.d;
 
 
 public class MyActivity extends Activity {
     NotificationManagerCompat nManager;
+    TwitterRequest twitterRequest;
 
     public static final int SIMPLE_NOT = 1;
     public static final int VOICE_ID = 2;
@@ -30,8 +43,54 @@ public class MyActivity extends Activity {
         setContentView(R.layout.activity_my);
 
         nManager = NotificationManagerCompat.from(this);
+        twitterRequest = new TwitterRequest();
+        twitterRequest.setListener(OnTwitterListener);
 
     }
+
+    TwitterListener OnTwitterListener = new TwitterListener() {
+        @Override
+        public void onTwitterResponse(List<Status> tweets) {
+            int count = 0;
+
+            ArrayList<Notification> notificationList = new ArrayList<Notification>(5);
+
+            for (Status s: tweets) {
+                if (count > 5)
+                    break;
+
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(s.getCreatedAt());
+                int hours = calendar.get(Calendar.HOUR_OF_DAY);
+                int minutes = calendar.get(Calendar.MINUTE);
+                int seconds = calendar.get(Calendar.SECOND);
+
+                Notification page = new NotificationCompat.Builder(MyActivity.this)
+                        .setContentTitle(s.getUser().getName())
+                        .setSubText(hours+":"+minutes+":"+seconds)
+                        .setSmallIcon(R.drawable.icon_microphone)
+                        .setContentText(s.getText())
+                        .build();
+
+                notificationList.add(page);
+
+
+                d("[DEBUG]", "Author: "+s.getUser().getName()+"\nAt: "+s.getCreatedAt().toString()+"\nText: "+s.getText());
+                count ++;
+            }
+
+            NotificationCompat.Builder nBuilder = new NotificationCompat.Builder(MyActivity.this)
+                    .setContentTitle("Best tweets")
+                    .setContentText("The best tweets at last hour")
+                    .setSmallIcon(R.drawable.icon_gdg);
+
+            Notification wearNotification = new WearableNotifications.Builder(nBuilder)
+                    .addPages(notificationList)
+                    .build();
+
+            nManager.notify(4, wearNotification);
+        }
+    };
 
     public void send_simple_notification (View v) {
         Intent directoryEvent = new Intent(Intent.ACTION_VIEW);
@@ -136,4 +195,61 @@ public class MyActivity extends Activity {
         nManager.notify(3, wearableNotification);
     }
 
+
+    public void twitter_test (View v) {
+        twitterRequest.execute();
+    }
+}
+
+interface TwitterListener {
+    public void onTwitterResponse (List<Status> tweets);
+}
+
+class TwitterRequest extends AsyncTask<Void, Void, List<Status>> {
+    ConfigurationBuilder cb;
+    TwitterFactory tf;
+    Twitter twitter;
+    TwitterListener listener;
+
+    public void setListener(TwitterListener listener) {
+        this.listener = listener;
+    }
+
+    @Override
+    protected void onPreExecute() {
+        cb = new ConfigurationBuilder();
+
+        cb.setDebugEnabled(true)
+                .setOAuthConsumerKey("8CUqyFb3ToNkTAE3dG3eEIdtH")
+                .setOAuthConsumerSecret("S16X7sEGgOzbNmcTisVgvSTW0gVgfzxKQK8rozUecTuqA75ZlR")
+                .setOAuthAccessToken("583784686-fPQNzOmed97EROF0Xi5laBhfqkGnUWajDupeMJF5")
+                .setOAuthAccessTokenSecret("asKSfrwg57bNpVVuwmdNp0v4IFdx2z31yiUZDemeoXBLJ");
+
+        tf = new TwitterFactory(cb.build());
+        twitter = tf.getInstance();
+
+
+        super.onPreExecute();
+    }
+
+    @Override
+    protected List<twitter4j.Status> doInBackground(Void... voids) {
+        List<twitter4j.Status> statuses = null;
+
+        try {
+             statuses = twitter.getHomeTimeline();
+
+        } catch (TwitterException e) {
+            e.printStackTrace();
+        }
+
+        return statuses;
+    }
+
+    @Override
+    protected void onPostExecute(List<twitter4j.Status> statuses) {
+        super.onPostExecute(statuses);
+
+        listener.onTwitterResponse(statuses);
+    }
 }
