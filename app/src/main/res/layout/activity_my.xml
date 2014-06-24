@@ -36,4 +36,13 @@
         android:onClick="send_voice_notification"/>
 
 
+    <Button
+        android:text="Send pages notification"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_marginTop="20dp"
+        android:fontFamily="sans-serif-light"
+        android:onClick="send_pages_notification"/>
+
+
 </LinearLayout>

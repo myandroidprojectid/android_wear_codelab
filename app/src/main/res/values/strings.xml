@@ -13,4 +13,8 @@
         <item> Nope</item>
     </string-array>
 
+    <string name="big_text1">GDG son las siglas de Google Developers Group; anteriormente conocidos como GTUG. Este grupo pretende ser el punto de encuentro de desarrolladores familiarizados con las tecnologías de Google en Vigo. </string>
+    <string name="big_text2">La intención es compartir experiencias y generar networking entre los miembros del grupo, consiguiendo así mejorar a nivel profesional y fomentando el desarrollo colaborativo. </string>
+    <string name="big_text3">Se ha facilitado este grupo para manejar información dinámica, como dudas, guías, enlaces o cualquier tipo de recurso para que a partir de ahora tengamos un lugar en Vigo y el primero en Galicia en el que compartir ideas y conocimientos.</string>
+
 </resources>

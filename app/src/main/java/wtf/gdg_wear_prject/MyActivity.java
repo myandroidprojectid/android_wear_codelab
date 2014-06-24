@@ -13,11 +13,15 @@ import android.preview.support.wearable.notifications.WearableNotifications;
 import android.support.v4.app.NotificationCompat;
 import android.view.View;
 
+import static android.app.Notification.*;
+
 
 public class MyActivity extends Activity {
     NotificationManagerCompat nManager;
 
     public static final int SIMPLE_NOT = 1;
+    public static final int VOICE_ID = 2;
+
     public static final String VOICE_RETURN_KEY = "wear_gdg_voices";
 
     @Override
@@ -46,7 +50,7 @@ public class MyActivity extends Activity {
     }
 
 
-    public static final int VOICE_ID = 2;
+
     public void send_voice_notification (View v) {
 
         Intent replyIntent = new Intent(MyActivity.this, ReplyActivity.class);
@@ -77,6 +81,59 @@ public class MyActivity extends Activity {
                  .build();
 
         nManager.notify(VOICE_ID, wearNotification);
+    }
+
+
+    public void send_pages_notification (View v) {
+        String string1 = getResources().getString(R.string.big_text1);
+        String string2 = getResources().getString(R.string.big_text2);
+        String string3 = getResources().getString(R.string.big_text3);
+
+        BigTextStyle bigText1 = new BigTextStyle()
+                .bigText(string1)
+                .setBigContentTitle("El GDG Mola");
+
+        BigTextStyle bigText2 = new BigTextStyle()
+                .bigText(string1)
+                .setBigContentTitle("El GDG es Awesome");
+
+        BigTextStyle bigText3 = new BigTextStyle()
+                .bigText(string2)
+                .setBigContentTitle("El GDG No regala nada...");
+
+        Notification notification1 = new Builder(this)
+                .setStyle(bigText1)
+                .setSmallIcon(R.drawable.icon_gdg)
+                .build();
+
+        Notification notification2 = new Builder(this)
+                .setStyle(bigText2)
+                .setSmallIcon(R.drawable.icon_gdg)
+                .build();
+
+        Notification notification3 = new Builder(this)
+                .setStyle(bigText3)
+                .setSmallIcon(R.drawable.icon_gdg)
+                .build();
+
+        NotificationCompat.Builder roonotificationBuilder = new NotificationCompat.Builder(this)
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.back_gdg))
+                .setContentText("El contenido que viene a continuación te mostrará la esencia del GDG")
+                .setContentTitle("GDG Vigo")
+                .setSmallIcon(R.drawable.icon_gdg);
+
+        WearableNotifications.Action join = new WearableNotifications.Action
+                .Builder(R.drawable.icon_gdg, "Unirse", null)
+                .build();
+
+        Notification wearableNotification = new WearableNotifications.Builder(roonotificationBuilder)
+                .addPage(notification1)
+                .addPage(notification2)
+                .addPage(notification3)
+                .addAction(join)
+                .build();
+
+        nManager.notify(3, wearableNotification);
     }
 
 }
