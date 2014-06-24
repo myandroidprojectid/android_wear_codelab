@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">GDG_Wear_prject</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="textiview_text">Android wear codelab</string>
+    <string name="first_notification">Simple Notification</string>
+
+</resources>

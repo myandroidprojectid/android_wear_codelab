@@ -1,0 +1,30 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:orientation="vertical"
+    tools:context=".MyActivity">
+
+    <TextView
+        android:text="@string/textiview_text"
+        android:textSize="40sp"
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:fontFamily="sans-serif-light"
+        android:textColor="#ff168bff"
+        android:layout_height="wrap_content" />
+
+
+    <Button
+        android:text="@string/first_notification"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_marginTop="20dp"
+        android:fontFamily="sans-serif-light"
+        android:onClick="send_simple_notification"/>
+
+</LinearLayout>
