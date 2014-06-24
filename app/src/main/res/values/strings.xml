@@ -6,5 +6,11 @@
     <string name="action_settings">Settings</string>
     <string name="textiview_text">Android wear codelab</string>
     <string name="first_notification">Simple Notification</string>
+    <string name="second_not">Send voice notification</string>
+
+    <string-array name="voice_response">
+        <item> Yep</item>
+        <item> Nope</item>
+    </string-array>
 
 </resources>

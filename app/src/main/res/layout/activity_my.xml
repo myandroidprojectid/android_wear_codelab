@@ -27,4 +27,13 @@
         android:fontFamily="sans-serif-light"
         android:onClick="send_simple_notification"/>
 
+    <Button
+        android:text="@string/second_not"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_marginTop="20dp"
+        android:fontFamily="sans-serif-light"
+        android:onClick="send_voice_notification"/>
+
+
 </LinearLayout>
